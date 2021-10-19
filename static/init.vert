@@ -9,6 +9,7 @@ float exponentialOut(float t) {
   // those are mandatory uniforms that the lib sets and that contain our model view and projection matrix
   uniform mat4 uMVMatrix;
   uniform mat4 uPMatrix;
+  uniform float uTime;
   // our texture matrix that will handle image cover
   uniform mat4 uTextureMatrix0;
   // pass your vertex and texture coords to the fragment shader
@@ -17,20 +18,21 @@ float exponentialOut(float t) {
   varying float vAlpha;
 
 void main(void) {
-  vec3 position = aVertexPosition;
-    vec2 uv = aTextureCoord;
-    vec2 vUv = uv;
-    vec3 posSway = position;
-    vec3 wave = vec3(80.0, -40.0, 10.0);
-    wave.y += sin(59.4703 * 0.2 + uv.x * 2.0 * PI_2 + uv.y * 4.0 * PI_2) * 15.0;
+  // vTextureCoord = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;
+    vec3 posSway = aVertexPosition;
+    float progress = 0.984;
+    float opacity = 1.7;
+    vec3 wave = vec3(1.0, -1.0, 1.0);
+    wave.y += sin(uTime * 0.1 + vTextureCoord.x * 2.0 * PI_2 + vTextureCoord.y * 4.0 * PI_2) * 15.0;
     posSway += wave;
-    vec2 d = sin(vUv * vec2(1.0, 2.0) * PI_2) * 0.25 + 0.25;
-    float s = smoothstep(0.0, 1.0, .0 - d.x - d.y);
-    vec3 pos = mix(position, posSway, s);
-    vAlpha = exponentialOut(1.0 - s) * 1.;
+    vec2 d = sin(vTextureCoord * vec2(1.0, 2.0) * PI_2) * 0.25 + 0.25;
+    float s = smoothstep(0.0, 1.0, progress - d.x - d.y);
+    vec3 pos = mix(aVertexPosition, posSway, s);
     gl_Position = uPMatrix * uMVMatrix * vec4(pos, 1.0);
-    //   vTextureCoord = (uTextureMatrix0 * vec4(aTextureCoord, 0.0, 1.0)).xy;
-//   vVertexPosition = vertexPosition;
+  vTextureCoord = aTextureCoord;
+    vAlpha = exponentialOut(1.0 - s) * opacity;
+      
+  // vVertexPosition = pos;
 }
 
 

@@ -1,7 +1,7 @@
 import './style.css'
 import {Curtains, Plane} from "curtainsjs";
-import fragment from './dist/init.frag?raw'
-import vertex from './dist/init.vert?raw'
+import fragment from './static/init.frag?raw'
+import vertex from './static/init.vert?raw'
 
 // wait for everything to be ready
 window.addEventListener("load", () => {
@@ -14,7 +14,8 @@ const planeElement = document.getElementsByClassName("plane")[0];
 // set our initial parameters (basic uniforms)
 const params = {
 vertexShader: vertex, // our vertex shader ID
-fragmentShader: fragment, // our fragment shader ID
+fragmentShader: fragment,
+fov: 210, // our fragment shader ID
 uniforms: {
 time: {
 name: "uTime", // uniform name that will be passed to our shaders
